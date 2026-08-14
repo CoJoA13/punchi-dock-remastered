@@ -289,7 +289,8 @@ KCM.SimpleKCM {
                 Layout.maximumWidth: page.contentWidthHint
                 visible: page.inPanel && !panelLengthModeBridge.fillAvailable
                     && (page.cfg_panelAlignmentMode !== "start"
-                        || page.cfg_panelLengthMode === "fill")
+                        || page.cfg_panelLengthMode === "fill"
+                        || page.cfg_panelAlignmentOffset !== 0)
                 type: Kirigami.MessageType.Information
                 text: page.verticalPanel
                     ? i18nc("@info", "Alignment and “Fill free panel space” take effect only when this Plasma panel’s height is set to fill its screen edge. Enter the panel’s Edit Mode and set its height to Fill.")
