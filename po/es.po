@@ -4727,3 +4727,19 @@ msgstr "filas"
 
 #~ msgid "Custom"
 #~ msgstr "Personalizado"
+
+#: contents/ui/config/ConfigGeneral.qml:194
+msgctxt "@info"
+msgid ""
+"Alignment and “Fill free panel space” take effect only when this Plasma "
+"panel’s height is set to fill its screen edge. Enter the panel’s Edit Mode "
+"and set its height to Fill."
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:195
+msgctxt "@info"
+msgid ""
+"Alignment and “Fill free panel space” take effect only when this Plasma "
+"panel’s width is set to fill its screen edge. Enter the panel’s Edit Mode "
+"and set its width to Fill."
+msgstr ""

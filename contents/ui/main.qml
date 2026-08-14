@@ -1073,9 +1073,9 @@ PlasmoidItem {
     }
 
     Layout.fillWidth: inPanel && !hiddenByVirtualDesktop
-        && (dockGeometry.verticalPanel || dockGeometry.panelFillLengthEnabled)
+        && (dockGeometry.verticalPanel || dockGeometry.panelNeedsLengthAllocation)
     Layout.fillHeight: inPanel && !hiddenByVirtualDesktop
-        && (dockGeometry.horizontalPanel || dockGeometry.panelFillLengthEnabled)
+        && (dockGeometry.horizontalPanel || dockGeometry.panelNeedsLengthAllocation)
     Layout.minimumWidth: inPanel ? dockGeometry.panelMinimumWidth : -1
     Layout.minimumHeight: inPanel ? dockGeometry.panelMinimumHeight : -1
     Layout.preferredWidth: inPanel ? dockGeometry.panelPreferredWidth : -1
@@ -1101,9 +1101,9 @@ PlasmoidItem {
         implicitWidth: visible ? dockGeometry.panelPreferredWidth : 0
         implicitHeight: visible ? dockGeometry.panelPreferredHeight : 0
         Layout.fillWidth: root.inPanel && visible
-            && (dockGeometry.verticalPanel || dockGeometry.panelFillLengthEnabled)
+            && (dockGeometry.verticalPanel || dockGeometry.panelNeedsLengthAllocation)
         Layout.fillHeight: root.inPanel && visible
-            && (dockGeometry.horizontalPanel || dockGeometry.panelFillLengthEnabled)
+            && (dockGeometry.horizontalPanel || dockGeometry.panelNeedsLengthAllocation)
         Layout.minimumWidth: dockGeometry.panelMinimumWidth
         Layout.minimumHeight: dockGeometry.panelMinimumHeight
         Layout.preferredWidth: dockGeometry.panelPreferredWidth
@@ -1185,7 +1185,6 @@ PlasmoidItem {
 
         Item {
             id: dockWrapper
-            anchors.centerIn: parent
             // This nested representation intentionally reads the owning
             // PlasmoidItem and sibling controllers to follow panel geometry.
             // qmllint disable unqualified
@@ -1194,8 +1193,68 @@ PlasmoidItem {
                 : dockLayout.implicitWidth + dockGeometry.floatingExtraWidth
             implicitHeight: root.inPanel ? dockGeometry.panelPreferredHeight : dockLayout.implicitHeight
                 + dockGeometry.floatingExtraHeight
-            width: root.inPanel ? parent.width : implicitWidth
-            height: root.inPanel ? parent.height : implicitHeight
+            // The cross axis always fills the panel thickness; the main axis
+            // fills only when the dock background itself should span the panel
+            // (fill length mode). In fit-content mode the block stays sized to
+            // its content and is positioned via x/y below.
+            width: {
+                if (!root.inPanel) {
+                    return implicitWidth
+                }
+                if (dockGeometry.verticalPanel) {
+                    return parent.width
+                }
+                if (dockGeometry.panelFillLengthEnabled) {
+                    return parent.width
+                }
+                // Never exceed the length actually assigned to the applet: in a
+                // Fill panel shared with other applets the allocation can be
+                // tighter than the content, and overflowing it would overlap a
+                // neighbour and drive panelAlignedBlockOffset() to zero slack.
+                return Math.min(implicitWidth, parent.width)
+            }
+            height: {
+                if (!root.inPanel) {
+                    return implicitHeight
+                }
+                if (!dockGeometry.verticalPanel) {
+                    return parent.height
+                }
+                if (dockGeometry.panelFillLengthEnabled) {
+                    return parent.height
+                }
+                return Math.min(implicitHeight, parent.height)
+            }
+            // Only clip when the wrapper was actually clamped below its content
+            // (an oversubscribed shared Fill panel): dockLayout keeps its full
+            // implicit size and its alignment offset would otherwise paint icons
+            // past the wrapper onto a neighbour. In every normal case the
+            // wrapper equals its content, so clipping stays off and hover zoom,
+            // reflections, and glow render unclipped as before.
+            clip: root.inPanel && !dockGeometry.panelFillLengthEnabled
+                && (width < implicitWidth || height < implicitHeight)
+            // Cross axis is centered within the panel thickness. Along the main
+            // axis, a filled block sits at 0 (icons are aligned internally by
+            // dockLayout); a content-sized block is shifted by the configured
+            // alignment so "Fit content" can still center or end-align.
+            x: {
+                if (!root.inPanel || dockGeometry.verticalPanel) {
+                    return Math.round((parent.width - width) / 2)
+                }
+                if (dockGeometry.panelFillLengthEnabled) {
+                    return 0
+                }
+                return dockGeometry.panelAlignedBlockOffset(parent.width, width)
+            }
+            y: {
+                if (!root.inPanel || !dockGeometry.verticalPanel) {
+                    return Math.round((parent.height - height) / 2)
+                }
+                if (dockGeometry.panelFillLengthEnabled) {
+                    return 0
+                }
+                return dockGeometry.panelAlignedBlockOffset(parent.height, height)
+            }
 
             Component.onCompleted: root.floatingDockAnchor = dockWrapper
             onXChanged: dockGeometry.updateFloatingScreenEdge(dockWrapper)

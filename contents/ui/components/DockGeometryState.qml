@@ -161,6 +161,28 @@ QtObject {
         && panelUsesFillAvailable
         && !root.hiddenByVirtualDesktop
         && root.configuredPanelLengthMode === "fill"
+    // The applet must claim the panel's full length whenever the dock either
+    // fills it outright or needs slack to position a content-sized block away
+    // from the start edge (center/end alignment). Both require the host Plasma
+    // panel to offer free length in the first place (panelUsesFillAvailable).
+    readonly property bool panelNeedsLengthAllocation: root.inPanel
+        && panelUsesFillAvailable
+        && !root.hiddenByVirtualDesktop
+        && (root.configuredPanelLengthMode === "fill"
+            || root.configuredPanelAlignmentMode !== "start")
+    // Aligns a content-sized block within the allocated panel length. Returns
+    // the main-axis offset for the configured alignment; "start" stays flush.
+    function panelAlignedBlockOffset(available, content) {
+        const slack = Math.max(0, Math.round(Number(available) || 0)
+            - Math.round(Number(content) || 0))
+        if (root.configuredPanelAlignmentMode === "center") {
+            return Math.round(slack / 2)
+        }
+        if (root.configuredPanelAlignmentMode === "end") {
+            return slack
+        }
+        return 0
+    }
     readonly property int panelItemWidth: Math.ceil(Math.max(effectiveIconSize + 12,
         root.dockShowLabels ? effectiveIconSize * 1.85 : 0))
     readonly property int panelItemHeight: Math.ceil(effectiveIconSize + 12

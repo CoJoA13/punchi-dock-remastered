@@ -159,7 +159,7 @@ KCM.SimpleKCM {
 
             // qmllint disable unqualified
             RowLayout {
-                visible: page.inPanel && panelLengthModeBridge.fillAvailable
+                visible: page.inPanel
                 Kirigami.FormData.label: page.verticalPanel ? i18n("Vertical alignment:") : i18n("Horizontal alignment:")
                 Layout.maximumWidth: page.contentWidthHint
 
@@ -178,6 +178,22 @@ KCM.SimpleKCM {
                         cursorEnabled: page.interactiveCursorEnabled
                     }
                 }
+            }
+
+            // Alignment (Center/End) and "Fill free panel space" need the host
+            // Plasma panel to offer free length. When it does not, the choices
+            // are stored but inert, so explain how to unlock them.
+            Kirigami.InlineMessage {
+                Layout.fillWidth: true
+                Layout.maximumWidth: page.contentWidthHint
+                visible: page.inPanel && !panelLengthModeBridge.fillAvailable
+                    && (page.cfg_panelAlignmentMode !== "start"
+                        || page.cfg_panelLengthMode === "fill")
+                type: Kirigami.MessageType.Information
+                text: page.verticalPanel
+                    ? i18nc("@info", "Alignment and “Fill free panel space” take effect only when this Plasma panel’s height is set to fill its screen edge. Enter the panel’s Edit Mode and set its height to Fill.")
+                    : i18nc("@info", "Alignment and “Fill free panel space” take effect only when this Plasma panel’s width is set to fill its screen edge. Enter the panel’s Edit Mode and set its width to Fill.")
+                Accessible.name: text.replace(/“|”/g, "")
             }
             // qmllint enable unqualified
 
