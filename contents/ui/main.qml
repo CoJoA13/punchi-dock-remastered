@@ -1163,7 +1163,14 @@ PlasmoidItem {
                 if (dockGeometry.verticalPanel) {
                     return parent.width
                 }
-                return dockGeometry.panelFillLengthEnabled ? parent.width : implicitWidth
+                if (dockGeometry.panelFillLengthEnabled) {
+                    return parent.width
+                }
+                // Never exceed the length actually assigned to the applet: in a
+                // Fill panel shared with other applets the allocation can be
+                // tighter than the content, and overflowing it would overlap a
+                // neighbour and drive panelAlignedBlockOffset() to zero slack.
+                return Math.min(implicitWidth, parent.width)
             }
             height: {
                 if (!root.inPanel) {
@@ -1172,7 +1179,10 @@ PlasmoidItem {
                 if (!dockGeometry.verticalPanel) {
                     return parent.height
                 }
-                return dockGeometry.panelFillLengthEnabled ? parent.height : implicitHeight
+                if (dockGeometry.panelFillLengthEnabled) {
+                    return parent.height
+                }
+                return Math.min(implicitHeight, parent.height)
             }
             // Cross axis is centered within the panel thickness. Along the main
             // axis, a filled block sits at 0 (icons are aligned internally by
