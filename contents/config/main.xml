@@ -44,6 +44,21 @@
     <entry name="panelAlignmentMode" type="String">
       <default>start</default>
     </entry>
+    <entry name="panelFitMaxLengthPercent" type="Int">
+      <default>0</default>
+    </entry>
+    <entry name="panelAlignmentOffset" type="Int">
+      <default>0</default>
+    </entry>
+    <entry name="panelAlignmentOffsetReference" type="String">
+      <default>panel</default>
+    </entry>
+    <entry name="dockContentHorizontalPadding" type="Int">
+      <default>10</default>
+    </entry>
+    <entry name="dockContentVerticalPadding" type="Int">
+      <default>12</default>
+    </entry>
   </group>
   <group name="Appearance">
     <entry name="showLabels" type="Bool">

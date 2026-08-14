@@ -374,6 +374,26 @@ PlasmoidItem {
         }
         configuredPanelLengthMode: String(Plasmoid.configuration.panelLengthMode || "fit")
         configuredPanelAlignmentMode: String(Plasmoid.configuration.panelAlignmentMode || "start")
+        configuredFitMaxLengthPercent: {
+            const percent = Number(Plasmoid.configuration.panelFitMaxLengthPercent)
+            return Number.isFinite(percent)
+                ? Math.max(0, Math.min(100, Math.round(percent)))
+                : 0
+        }
+        configuredAlignmentOffset: {
+            const offset = Number(Plasmoid.configuration.panelAlignmentOffset)
+            return Number.isFinite(offset)
+                ? Math.max(-4096, Math.min(4096, Math.round(offset)))
+                : 0
+        }
+        configuredHorizontalPadding: {
+            const padding = Number(Plasmoid.configuration.dockContentHorizontalPadding)
+            return Number.isFinite(padding) ? padding : 10
+        }
+        configuredVerticalPadding: {
+            const padding = Number(Plasmoid.configuration.dockContentVerticalPadding)
+            return Number.isFinite(padding) ? padding : 12
+        }
         panelHoverScale: dockConfig.panelHoverScale
         folderPopupExtraDistance: dockConfig.folderPopupExtraDistance
         dockShowLabels: dockConfig.dockShowLabels
@@ -1233,6 +1253,21 @@ PlasmoidItem {
             // reflections, and glow render unclipped as before.
             clip: root.inPanel && !dockGeometry.panelFillLengthEnabled
                 && (width < implicitWidth || height < implicitHeight)
+            // Screen geometry backing the "center on screen" reference. The
+            // panel window sits at the screen edge, so its origin cancels and a
+            // block is centred on the screen axis using the parent's in-scene
+            // position (never the block's own, which would form a binding loop).
+            readonly property rect blockScreenGeometry: {
+                const containment = Plasmoid.containment
+                return containment && containment.screenGeometry
+                    ? containment.screenGeometry
+                    : Qt.rect(0, 0, Screen.width, Screen.height)
+            }
+            readonly property bool blockCentersOnScreen:
+                dockGeometry.configuredPanelAlignmentMode === "center"
+                && String(Plasmoid.configuration.panelAlignmentOffsetReference
+                    || "panel") === "screen"
+
             // Cross axis is centered within the panel thickness. Along the main
             // axis, a filled block sits at 0 (icons are aligned internally by
             // dockLayout); a content-sized block is shifted by the configured
@@ -1244,6 +1279,12 @@ PlasmoidItem {
                 if (dockGeometry.panelFillLengthEnabled) {
                     return 0
                 }
+                if (blockCentersOnScreen) {
+                    const desired = blockScreenGeometry.width / 2
+                        - mainContainer.Kirigami.ScenePosition.x - width / 2
+                        + dockGeometry.configuredAlignmentOffset
+                    return dockGeometry.clampBlockOffset(parent.width, width, desired)
+                }
                 return dockGeometry.panelAlignedBlockOffset(parent.width, width)
             }
             y: {
@@ -1252,6 +1293,12 @@ PlasmoidItem {
                 }
                 if (dockGeometry.panelFillLengthEnabled) {
                     return 0
+                }
+                if (blockCentersOnScreen) {
+                    const desired = blockScreenGeometry.height / 2
+                        - mainContainer.Kirigami.ScenePosition.y - height / 2
+                        + dockGeometry.configuredAlignmentOffset
+                    return dockGeometry.clampBlockOffset(parent.height, height, desired)
                 }
                 return dockGeometry.panelAlignedBlockOffset(parent.height, height)
             }
@@ -1278,8 +1325,22 @@ PlasmoidItem {
                 const availableLength = isVertical
                     ? Number(root.availableScreenRect.height || 0)
                     : Number(root.availableScreenRect.width || 0)
-                return Number.isFinite(availableLength) && availableLength > 0
-                    ? availableLength : -1
+                if (!Number.isFinite(availableLength) || availableLength <= 0) {
+                    return -1
+                }
+                // A user-configured maximum bounds the dock to a fixed fraction
+                // of the screen axis. It is a constant input (never the assigned
+                // allocation), so capacity stays stable while overflow tasks are
+                // routed to the overflow item instead of growing the dock. The
+                // cap is Fit-content-only; a hidden value must not keep limiting
+                // a Fill selection that is merely inert on this host panel.
+                const maxPercent = dockGeometry.configuredFitMaxLengthPercent
+                if (dockGeometry.configuredPanelLengthMode === "content"
+                        && maxPercent > 0 && maxPercent < 100) {
+                    return Math.min(availableLength,
+                        Math.max(1, Math.round(availableLength * maxPercent / 100)))
+                }
+                return availableLength
             }
             readonly property int dynamicTaskSlotCapacity: {
                 if (dynamicTaskCapacityLength < 0) {

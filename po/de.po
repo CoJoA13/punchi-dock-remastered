@@ -4708,7 +4708,7 @@ msgid ""
 "Alignment and “Fill free panel space” take effect only when this Plasma "
 "panel’s height is set to fill its screen edge. Enter the panel’s Edit Mode "
 "and set its height to Fill."
-msgstr ""
+msgstr "„Ausrichtung“ und „Freien Platz im Panel ausfüllen“ wirken sich nur aus, wenn die Höhe dieses Plasma-Panels auf das Ausfüllen der Bildschirmkante eingestellt ist. Öffnen Sie den Bearbeitungsmodus des Panels und stellen Sie die Höhe auf „Ausfüllen“."
 
 #: contents/ui/config/ConfigGeneral.qml:195
 msgctxt "@info"
@@ -4716,4 +4716,99 @@ msgid ""
 "Alignment and “Fill free panel space” take effect only when this Plasma "
 "panel’s width is set to fill its screen edge. Enter the panel’s Edit Mode "
 "and set its width to Fill."
-msgstr ""
+msgstr "„Ausrichtung“ und „Freien Platz im Panel ausfüllen“ wirken sich nur aus, wenn die Breite dieses Plasma-Panels auf das Ausfüllen der Bildschirmkante eingestellt ist. Öffnen Sie den Bearbeitungsmodus des Panels und stellen Sie die Breite auf „Ausfüllen“."
+
+#: contents/ui/config/ConfigGeneral.qml:278
+msgctxt "@label pixel offset"
+msgid "%1 px"
+msgstr "%1 px"
+
+#: contents/ui/config/ConfigGeneral.qml:197
+#, javascript-format
+msgctxt "@label percentage of the screen axis"
+msgid "%1%"
+msgstr "%1%"
+
+#: contents/ui/config/ConfigGeneral.qml:268
+msgid "Alignment offset"
+msgstr "Ausrichtungsversatz"
+
+#: contents/ui/config/ConfigGeneral.qml:258
+msgid "Alignment offset:"
+msgstr "Ausrichtungsversatz:"
+
+#: contents/ui/config/ConfigGeneral.qml:525
+msgctxt "@info"
+msgid ""
+"Auto-hide and always-on-top are provided by Plasma’s panel settings, not the "
+"dock. Right-click the panel, enter Edit Mode, and open Visibility: choose "
+"Auto Hide, or Windows Go Below / Always Visible to keep the dock above "
+"windows."
+msgstr "Automatisches Ausblenden und „Immer im Vordergrund“ werden von den Panel-Einstellungen von Plasma bereitgestellt, nicht vom Dock. Klicken Sie mit der rechten Maustaste auf das Panel, öffnen Sie den Bearbeitungsmodus und dann „Sichtbarkeit“: Wählen Sie „Automatisch ausblenden“ oder „Fenster im Hintergrund“ / „Immer sichtbar“, um das Dock über den Fenstern zu halten."
+
+#: contents/ui/config/ConfigGeneral.qml:247
+msgid "Center relative to"
+msgstr "Zentrieren relativ zu"
+
+#: contents/ui/config/ConfigGeneral.qml:232
+msgid "Center relative to:"
+msgstr "Zentrieren relativ zu:"
+
+#: contents/ui/config/ConfigGeneral.qml:370
+msgid "Horizontal padding"
+msgstr "Horizontaler Innenabstand"
+
+#: contents/ui/config/ConfigGeneral.qml:360
+msgid "Horizontal padding:"
+msgstr "Horizontaler Innenabstand:"
+
+#: contents/ui/config/ConfigGeneral.qml:186
+msgid ""
+"Limits how much of the screen axis dynamic tasks may use before overflowing, "
+"as a percentage. Pinned launchers and other fixed items are not affected. "
+"Zero means no limit."
+msgstr "Begrenzt als Prozentsatz, wie viel der Bildschirmachse dynamische Aufgaben belegen dürfen, bevor sie überlaufen. Angeheftete Starter und andere feste Elemente sind nicht betroffen. Null bedeutet keine Begrenzung."
+
+#: contents/ui/config/ConfigGeneral.qml:185
+msgid "Maximum dynamic task length"
+msgstr "Maximale Länge dynamischer Aufgaben"
+
+#: contents/ui/config/ConfigGeneral.qml:175
+msgid "Maximum task length:"
+msgstr "Maximale Aufgabenlänge:"
+
+#: contents/ui/config/ConfigGeneral.qml:399
+msgid "Padding above and below the dock background, from 0 to 32 pixels."
+msgstr "Innenabstand ober- und unterhalb des Dock-Hintergrunds, von 0 bis 32 Pixel."
+
+#: contents/ui/config/ConfigGeneral.qml:371
+msgid ""
+"Padding on the left and right of the dock background, from 0 to 32 pixels."
+msgstr "Innenabstand links und rechts des Dock-Hintergrunds, von 0 bis 32 Pixel."
+
+#: contents/ui/config/ConfigGeneral.qml:242
+msgid "Panel"
+msgstr "Panel"
+
+#: contents/ui/config/ConfigGeneral.qml:243
+msgid "Screen"
+msgstr "Bildschirm"
+
+#: contents/ui/config/ConfigGeneral.qml:269
+msgid ""
+"Shifts the aligned dock along the panel, in pixels. Positive moves it toward "
+"the end edge."
+msgstr "Verschiebt das ausgerichtete Dock entlang des Panels, in Pixel. Positive Werte verschieben es zur Endkante."
+
+#: contents/ui/config/ConfigGeneral.qml:196
+msgctxt "@label no maximum dock length"
+msgid "Unlimited"
+msgstr "Unbegrenzt"
+
+#: contents/ui/config/ConfigGeneral.qml:398
+msgid "Vertical padding"
+msgstr "Vertikaler Innenabstand"
+
+#: contents/ui/config/ConfigGeneral.qml:388
+msgid "Vertical padding:"
+msgstr "Vertikaler Innenabstand:"

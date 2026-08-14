@@ -4671,7 +4671,7 @@ msgid ""
 "Alignment and “Fill free panel space” take effect only when this Plasma "
 "panel’s height is set to fill its screen edge. Enter the panel’s Edit Mode "
 "and set its height to Fill."
-msgstr ""
+msgstr "«Alinhamento» e «Preencher o espaço livre do painel» só têm efeito quando a altura deste painel do Plasma está definida para preencher a borda da tela. Abra o Modo de edição do painel e defina sua altura como «Preencher»."
 
 #: contents/ui/config/ConfigGeneral.qml:195
 msgctxt "@info"
@@ -4679,4 +4679,99 @@ msgid ""
 "Alignment and “Fill free panel space” take effect only when this Plasma "
 "panel’s width is set to fill its screen edge. Enter the panel’s Edit Mode "
 "and set its width to Fill."
-msgstr ""
+msgstr "«Alinhamento» e «Preencher o espaço livre do painel» só têm efeito quando a largura deste painel do Plasma está definida para preencher a borda da tela. Abra o Modo de edição do painel e defina sua largura como «Preencher»."
+
+#: contents/ui/config/ConfigGeneral.qml:278
+msgctxt "@label pixel offset"
+msgid "%1 px"
+msgstr "%1 px"
+
+#: contents/ui/config/ConfigGeneral.qml:197
+#, javascript-format
+msgctxt "@label percentage of the screen axis"
+msgid "%1%"
+msgstr "%1%"
+
+#: contents/ui/config/ConfigGeneral.qml:268
+msgid "Alignment offset"
+msgstr "Deslocamento do alinhamento"
+
+#: contents/ui/config/ConfigGeneral.qml:258
+msgid "Alignment offset:"
+msgstr "Deslocamento do alinhamento:"
+
+#: contents/ui/config/ConfigGeneral.qml:525
+msgctxt "@info"
+msgid ""
+"Auto-hide and always-on-top are provided by Plasma’s panel settings, not the "
+"dock. Right-click the panel, enter Edit Mode, and open Visibility: choose "
+"Auto Hide, or Windows Go Below / Always Visible to keep the dock above "
+"windows."
+msgstr "A ocultamento automático e o «sempre no topo» são fornecidos pelas configurações do painel do Plasma, não pelo dock. Clique com o botão direito no painel, entre no Modo de edição e abra «Visibilidade»: escolha «Ocultar automaticamente», ou «Janelas ficam abaixo» / «Sempre visível» para manter o dock acima das janelas."
+
+#: contents/ui/config/ConfigGeneral.qml:247
+msgid "Center relative to"
+msgstr "Centralizar em relação a"
+
+#: contents/ui/config/ConfigGeneral.qml:232
+msgid "Center relative to:"
+msgstr "Centralizar em relação a:"
+
+#: contents/ui/config/ConfigGeneral.qml:370
+msgid "Horizontal padding"
+msgstr "Preenchimento horizontal"
+
+#: contents/ui/config/ConfigGeneral.qml:360
+msgid "Horizontal padding:"
+msgstr "Preenchimento horizontal:"
+
+#: contents/ui/config/ConfigGeneral.qml:186
+msgid ""
+"Limits how much of the screen axis dynamic tasks may use before overflowing, "
+"as a percentage. Pinned launchers and other fixed items are not affected. "
+"Zero means no limit."
+msgstr "Limita, como porcentagem, quanto do eixo da tela as tarefas dinâmicas podem usar antes de transbordar. Lançadores fixados e outros itens fixos não são afetados. Zero significa sem limite."
+
+#: contents/ui/config/ConfigGeneral.qml:185
+msgid "Maximum dynamic task length"
+msgstr "Comprimento máximo de tarefas dinâmicas"
+
+#: contents/ui/config/ConfigGeneral.qml:175
+msgid "Maximum task length:"
+msgstr "Comprimento máximo de tarefas:"
+
+#: contents/ui/config/ConfigGeneral.qml:399
+msgid "Padding above and below the dock background, from 0 to 32 pixels."
+msgstr "Preenchimento acima e abaixo do fundo do dock, de 0 a 32 pixels."
+
+#: contents/ui/config/ConfigGeneral.qml:371
+msgid ""
+"Padding on the left and right of the dock background, from 0 to 32 pixels."
+msgstr "Preenchimento à esquerda e à direita do fundo do dock, de 0 a 32 pixels."
+
+#: contents/ui/config/ConfigGeneral.qml:242
+msgid "Panel"
+msgstr "Painel"
+
+#: contents/ui/config/ConfigGeneral.qml:243
+msgid "Screen"
+msgstr "Tela"
+
+#: contents/ui/config/ConfigGeneral.qml:269
+msgid ""
+"Shifts the aligned dock along the panel, in pixels. Positive moves it toward "
+"the end edge."
+msgstr "Desloca o dock alinhado ao longo do painel, em pixels. Valores positivos o movem em direção à borda final."
+
+#: contents/ui/config/ConfigGeneral.qml:196
+msgctxt "@label no maximum dock length"
+msgid "Unlimited"
+msgstr "Ilimitado"
+
+#: contents/ui/config/ConfigGeneral.qml:398
+msgid "Vertical padding"
+msgstr "Preenchimento vertical"
+
+#: contents/ui/config/ConfigGeneral.qml:388
+msgid "Vertical padding:"
+msgstr "Preenchimento vertical:"
