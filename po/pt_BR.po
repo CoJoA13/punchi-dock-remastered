@@ -4680,3 +4680,97 @@ msgid ""
 "panel’s width is set to fill its screen edge. Enter the panel’s Edit Mode "
 "and set its width to Fill."
 msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:277
+msgctxt "@label pixel offset"
+msgid "%1 px"
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:194
+#, javascript-format
+msgctxt "@label percentage of the screen axis"
+msgid "%1%"
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:267
+msgid "Alignment offset"
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:255
+msgid "Alignment offset:"
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:526
+msgctxt "@info"
+msgid ""
+"Auto-hide and always-on-top are provided by Plasma’s panel settings, not the "
+"dock. Right-click the panel, enter Edit Mode, and open Visibility: choose "
+"Auto Hide, or Windows Go Below / Always Visible to keep the dock above "
+"windows."
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:183
+msgid ""
+"Caps the dock to a percentage of the screen axis in Fit content mode. Zero "
+"means no limit."
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:244
+msgid "Center relative to"
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:229
+msgid "Center relative to:"
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:370
+msgid "Horizontal padding"
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:358
+msgid "Horizontal padding:"
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:182
+msgid "Maximum dock length"
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:170
+msgid "Maximum length:"
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:400
+msgid "Padding above and below the dock background, from 0 to 32 pixels."
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:371
+msgid ""
+"Padding on the left and right of the dock background, from 0 to 32 pixels."
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:239
+msgid "Panel"
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:240
+msgid "Screen"
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:268
+msgid ""
+"Shifts the aligned dock along the panel, in pixels. Positive moves it toward "
+"the end edge."
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:193
+msgctxt "@label no maximum dock length"
+msgid "Unlimited"
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:399
+msgid "Vertical padding"
+msgstr ""
+
+#: contents/ui/config/ConfigGeneral.qml:387
+msgid "Vertical padding:"
+msgstr ""

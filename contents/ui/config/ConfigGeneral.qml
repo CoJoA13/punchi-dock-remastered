@@ -25,6 +25,11 @@ KCM.SimpleKCM {
     property string cfg_targetVirtualDesktop: ""
     property string cfg_panelLengthMode: "content"
     property string cfg_panelAlignmentMode: "start"
+    property alias cfg_panelFitMaxLengthPercent: fitMaxLengthSlider.value
+    property alias cfg_panelAlignmentOffset: alignmentOffsetSlider.value
+    property string cfg_panelAlignmentOffsetReference: "panel"
+    property alias cfg_dockContentHorizontalPadding: horizontalPaddingSlider.value
+    property alias cfg_dockContentVerticalPadding: verticalPaddingSlider.value
     readonly property bool interactiveCursorEnabled: !!Plasmoid.configuration.globalMouseCursor
     readonly property bool inPanel: Plasmoid.formFactor === PlasmaCore.Types.Horizontal || Plasmoid.formFactor === PlasmaCore.Types.Vertical
     readonly property bool verticalPanel: Plasmoid.formFactor === PlasmaCore.Types.Vertical
@@ -157,6 +162,39 @@ KCM.SimpleKCM {
                 }
             }
 
+            // Maximum length applies only in Fit content mode: it caps the dock
+            // to a fraction of the screen axis and routes extra dynamic tasks to
+            // the overflow item instead of growing the dock further.
+            RowLayout {
+                visible: page.inPanel && page.cfg_panelLengthMode === "content"
+                Kirigami.FormData.label: i18n("Maximum length:")
+                Layout.maximumWidth: page.contentWidthHint
+
+                Controls.Slider {
+                    id: fitMaxLengthSlider
+                    from: 0
+                    to: 100
+                    stepSize: 5
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: page.contentWidthHint - 90
+                    Accessible.name: i18n("Maximum dock length")
+                    Accessible.description: i18n("Caps the dock to a percentage of the screen axis in Fit content mode. Zero means no limit.")
+
+                    ConfigCursorBehavior {
+                        cursorEnabled: page.interactiveCursorEnabled
+                        role: "slider"
+                    }
+                }
+
+                Controls.Label {
+                    text: page.cfg_panelFitMaxLengthPercent <= 0
+                        ? i18nc("@label no maximum dock length", "Unlimited")
+                        : i18nc("@label percentage of the screen axis", "%1%", Math.round(page.cfg_panelFitMaxLengthPercent))
+                    font.bold: true
+                    Layout.preferredWidth: 80
+                }
+            }
+
             // qmllint disable unqualified
             RowLayout {
                 visible: page.inPanel
@@ -177,6 +215,64 @@ KCM.SimpleKCM {
                     ConfigCursorBehavior {
                         cursorEnabled: page.interactiveCursorEnabled
                     }
+                }
+            }
+
+            // Center relative to the whole screen instead of the applet's slice
+            // of the panel. Only meaningful for centered alignment; matters when
+            // the dock shares a Fill panel with other applets.
+            RowLayout {
+                visible: page.inPanel && page.cfg_panelLengthMode === "content"
+                    && page.cfg_panelAlignmentMode === "center"
+                Kirigami.FormData.label: i18n("Center relative to:")
+                Layout.maximumWidth: page.contentWidthHint
+
+                Controls.ComboBox {
+                    id: alignmentReferenceCombo
+                    Layout.preferredWidth: page.selectorWidthHint
+                    Layout.maximumWidth: page.selectorWidthHint
+                    textRole: "text"
+                    valueRole: "value"
+                    model: [
+                        { "text": i18n("Panel"), "value": "panel" },
+                        { "text": i18n("Screen"), "value": "screen" }
+                    ]
+                    currentIndex: Math.max(0, indexOfValue(page.cfg_panelAlignmentOffsetReference))
+                    onActivated: page.cfg_panelAlignmentOffsetReference = currentValue
+                    Accessible.name: i18n("Center relative to")
+
+                    ConfigCursorBehavior {
+                        cursorEnabled: page.interactiveCursorEnabled
+                    }
+                }
+            }
+
+            // Fine-tune shift of the aligned dock along the panel, in pixels.
+            RowLayout {
+                visible: page.inPanel && page.cfg_panelLengthMode === "content"
+                Kirigami.FormData.label: i18n("Alignment offset:")
+                Layout.maximumWidth: page.contentWidthHint
+
+                Controls.Slider {
+                    id: alignmentOffsetSlider
+                    from: -256
+                    to: 256
+                    stepSize: 2
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: page.contentWidthHint - 90
+                    Accessible.name: i18n("Alignment offset")
+                    Accessible.description: i18n("Shifts the aligned dock along the panel, in pixels. Positive moves it toward the end edge.")
+
+                    ConfigCursorBehavior {
+                        cursorEnabled: page.interactiveCursorEnabled
+                        role: "slider"
+                    }
+                }
+
+                Controls.Label {
+                    text: i18nc("@label pixel offset", "%1 px", Math.round(page.cfg_panelAlignmentOffset))
+                    font.bold: true
+                    Layout.preferredWidth: 80
                 }
             }
 
@@ -251,6 +347,62 @@ KCM.SimpleKCM {
                 }
             }
             // qmllint enable unqualified
+
+            // Dock background padding along and across the dock. Bounded 0-32;
+            // defaults (10/12) preserve the original spacing.
+            RowLayout {
+                Kirigami.FormData.label: i18n("Horizontal padding:")
+                Layout.maximumWidth: page.contentWidthHint
+
+                Controls.Slider {
+                    id: horizontalPaddingSlider
+                    from: 0
+                    to: 32
+                    stepSize: 1
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: page.contentWidthHint - 60
+                    Accessible.name: i18n("Horizontal padding")
+                    Accessible.description: i18n("Padding on the left and right of the dock background, from 0 to 32 pixels.")
+
+                    ConfigCursorBehavior {
+                        cursorEnabled: page.interactiveCursorEnabled
+                        role: "slider"
+                    }
+                }
+
+                Controls.Label {
+                    text: Math.round(page.cfg_dockContentHorizontalPadding) + " px"
+                    font.bold: true
+                    Layout.preferredWidth: 50
+                }
+            }
+
+            RowLayout {
+                Kirigami.FormData.label: i18n("Vertical padding:")
+                Layout.maximumWidth: page.contentWidthHint
+
+                Controls.Slider {
+                    id: verticalPaddingSlider
+                    from: 0
+                    to: 32
+                    stepSize: 1
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: page.contentWidthHint - 60
+                    Accessible.name: i18n("Vertical padding")
+                    Accessible.description: i18n("Padding above and below the dock background, from 0 to 32 pixels.")
+
+                    ConfigCursorBehavior {
+                        cursorEnabled: page.interactiveCursorEnabled
+                        role: "slider"
+                    }
+                }
+
+                Controls.Label {
+                    text: Math.round(page.cfg_dockContentVerticalPadding) + " px"
+                    font.bold: true
+                    Layout.preferredWidth: 50
+                }
+            }
 
             Kirigami.InlineMessage {
                 Kirigami.FormData.label: page.inPanel ? i18n("Limit:") : ""
@@ -352,6 +504,19 @@ KCM.SimpleKCM {
                     ? i18nc("@info:status <b> marks the current dock mode", "Current dock state: <b>Vertical panel</b>.<br>Fill free panel space is active only when the Plasma panel is set to Fill available; otherwise Punchi Dock remains compact.")
                     : i18nc("@info:status <b> marks the current dock mode", "Current dock state: <b>Horizontal panel</b>.<br>Fill free panel space is active only when the Plasma panel is set to Fill available; otherwise Punchi Dock remains compact.")
             Accessible.name: text.replace("<br>", " ").replace("<b>", "").replace("</b>", "")
+        }
+
+        // Auto-hide and always-on-top are panel-level behaviors owned by Plasma,
+        // not by the applet, so point users at the panel's own settings.
+        Kirigami.InlineMessage {
+            id: panelBehaviorInlineMessage
+            visible: page.inPanel
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignHCenter
+            type: Kirigami.MessageType.Information
+            showCloseButton: true
+            text: i18nc("@info", "Auto-hide and always-on-top are provided by Plasma’s panel settings, not the dock. Right-click the panel, enter Edit Mode, and open Visibility: choose Auto Hide, or Windows Go Below / Always Visible to keep the dock above windows.")
+            Accessible.name: text
         }
     }
 }

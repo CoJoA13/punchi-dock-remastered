@@ -14,6 +14,9 @@ QtObject {
     property int configuredIconSpacing: 8
     property string configuredPanelLengthMode: "fit"
     property string configuredPanelAlignmentMode: "start"
+    // 0 disables the cap; otherwise the fit-content dock's dynamic-task
+    // capacity is limited to this percentage of the available screen axis.
+    property int configuredFitMaxLengthPercent: 0
     property int folderPopupExtraDistance: 0
     property real panelHoverScale: 1.0
     property bool dockShowLabels: false
@@ -35,8 +38,15 @@ QtObject {
         return Math.round(Math.max(0, Math.min(24,
             Number.isFinite(spacing) ? spacing : 8)))
     }
-    readonly property int dockBackgroundHorizontalPadding: 10
-    readonly property int dockBackgroundVerticalPadding: 12
+    // Content padding around the dock background. Configurable, but bounded so
+    // extreme values cannot break panel geometry; defaults preserve the
+    // original 10/12 look.
+    property int configuredHorizontalPadding: 10
+    property int configuredVerticalPadding: 12
+    readonly property int dockBackgroundHorizontalPadding:
+        Math.max(0, Math.min(32, Math.round(Number(configuredHorizontalPadding))))
+    readonly property int dockBackgroundVerticalPadding:
+        Math.max(0, Math.min(32, Math.round(Number(configuredVerticalPadding))))
     readonly property int floatingExtraWidth: 48
     readonly property int floatingExtraHeight: 32
     readonly property int effectivePanelLocation: root.inPanel
@@ -170,9 +180,13 @@ QtObject {
         && !root.hiddenByVirtualDesktop
         && (root.configuredPanelLengthMode === "fill"
             || root.configuredPanelAlignmentMode !== "start")
-    // Aligns a content-sized block within the allocated panel length. Returns
-    // the main-axis offset for the configured alignment; "start" stays flush.
-    function panelAlignedBlockOffset(available, content) {
+    // Fine-tune shift (px) applied on top of the configured alignment. Positive
+    // moves the block toward the end edge; the result is clamped to the slack.
+    property int configuredAlignmentOffset: 0
+
+    // Base main-axis offset for the configured alignment, before the fine-tune
+    // shift; "start" stays flush.
+    function panelAlignmentBaseOffset(available, content) {
         const slack = Math.max(0, Math.round(Number(available) || 0)
             - Math.round(Number(content) || 0))
         if (root.configuredPanelAlignmentMode === "center") {
@@ -182,6 +196,19 @@ QtObject {
             return slack
         }
         return 0
+    }
+    // Clamps a desired main-axis offset to the range the block can occupy, so
+    // it never overflows the allocation or crosses to a negative position.
+    function clampBlockOffset(available, content, desired) {
+        const slack = Math.max(0, Math.round(Number(available) || 0)
+            - Math.round(Number(content) || 0))
+        return Math.max(0, Math.min(slack, Math.round(Number(desired) || 0)))
+    }
+    // Aligns a content-sized block within the allocated panel length, including
+    // the fine-tune offset (panel reference).
+    function panelAlignedBlockOffset(available, content) {
+        return clampBlockOffset(available, content,
+            panelAlignmentBaseOffset(available, content) + root.configuredAlignmentOffset)
     }
     readonly property int panelItemWidth: Math.ceil(Math.max(effectiveIconSize + 12,
         root.dockShowLabels ? effectiveIconSize * 1.85 : 0))
