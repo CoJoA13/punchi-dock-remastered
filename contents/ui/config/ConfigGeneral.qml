@@ -54,7 +54,12 @@ KCM.SimpleKCM {
         }
     }
     // qmllint enable missing-property
-    readonly property int panelCrossAxisPadding: verticalPanel ? 20 : 24
+    // Mirror DockGeometryState.panelCrossAxisPadding so the icon-size limit
+    // shown here matches what runtime geometry actually reserves: the cross
+    // axis uses horizontal padding on a vertical panel and vice versa.
+    readonly property int panelCrossAxisPadding: verticalPanel
+        ? Math.round(Number(cfg_dockContentHorizontalPadding)) * 2
+        : Math.round(Number(cfg_dockContentVerticalPadding)) * 2
     readonly property int safePanelIconSizeMax: detectedPanelThickness > 0
         ? Math.max(32, detectedPanelThickness - panelCrossAxisPadding - 12)
         : 96
@@ -162,12 +167,12 @@ KCM.SimpleKCM {
                 }
             }
 
-            // Maximum length applies only in Fit content mode: it caps the dock
-            // to a fraction of the screen axis and routes extra dynamic tasks to
-            // the overflow item instead of growing the dock further.
+            // Applies only in Fit content mode: caps how much of the screen axis
+            // dynamic tasks may use before overflowing. It bounds the growing
+            // (task) part of the dock, not fixed launchers/media/separators.
             RowLayout {
                 visible: page.inPanel && page.cfg_panelLengthMode === "content"
-                Kirigami.FormData.label: i18n("Maximum length:")
+                Kirigami.FormData.label: i18n("Maximum task length:")
                 Layout.maximumWidth: page.contentWidthHint
 
                 Controls.Slider {
@@ -177,8 +182,8 @@ KCM.SimpleKCM {
                     stepSize: 5
                     Layout.fillWidth: true
                     Layout.preferredWidth: page.contentWidthHint - 90
-                    Accessible.name: i18n("Maximum dock length")
-                    Accessible.description: i18n("Caps the dock to a percentage of the screen axis in Fit content mode. Zero means no limit.")
+                    Accessible.name: i18n("Maximum dynamic task length")
+                    Accessible.description: i18n("Limits how much of the screen axis dynamic tasks may use before overflowing, as a percentage. Pinned launchers and other fixed items are not affected. Zero means no limit.")
 
                     ConfigCursorBehavior {
                         cursorEnabled: page.interactiveCursorEnabled
@@ -351,6 +356,7 @@ KCM.SimpleKCM {
             // Dock background padding along and across the dock. Bounded 0-32;
             // defaults (10/12) preserve the original spacing.
             RowLayout {
+                visible: page.inPanel
                 Kirigami.FormData.label: i18n("Horizontal padding:")
                 Layout.maximumWidth: page.contentWidthHint
 
@@ -378,6 +384,7 @@ KCM.SimpleKCM {
             }
 
             RowLayout {
+                visible: page.inPanel
                 Kirigami.FormData.label: i18n("Vertical padding:")
                 Layout.maximumWidth: page.contentWidthHint
 

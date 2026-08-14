@@ -1331,9 +1331,12 @@ PlasmoidItem {
                 // A user-configured maximum bounds the dock to a fixed fraction
                 // of the screen axis. It is a constant input (never the assigned
                 // allocation), so capacity stays stable while overflow tasks are
-                // routed to the overflow item instead of growing the dock.
+                // routed to the overflow item instead of growing the dock. The
+                // cap is Fit-content-only; a hidden value must not keep limiting
+                // a Fill selection that is merely inert on this host panel.
                 const maxPercent = dockGeometry.configuredFitMaxLengthPercent
-                if (maxPercent > 0 && maxPercent < 100) {
+                if (dockGeometry.configuredPanelLengthMode === "content"
+                        && maxPercent > 0 && maxPercent < 100) {
                     return Math.min(availableLength,
                         Math.max(1, Math.round(availableLength * maxPercent / 100)))
                 }

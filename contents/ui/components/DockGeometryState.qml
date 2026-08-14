@@ -179,7 +179,8 @@ QtObject {
         && panelUsesFillAvailable
         && !root.hiddenByVirtualDesktop
         && (root.configuredPanelLengthMode === "fill"
-            || root.configuredPanelAlignmentMode !== "start")
+            || root.configuredPanelAlignmentMode !== "start"
+            || root.configuredAlignmentOffset !== 0)
     // Fine-tune shift (px) applied on top of the configured alignment. Positive
     // moves the block toward the end edge; the result is clamped to the slack.
     property int configuredAlignmentOffset: 0
