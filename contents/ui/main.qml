@@ -1184,6 +1184,14 @@ PlasmoidItem {
                 }
                 return Math.min(implicitHeight, parent.height)
             }
+            // Only clip when the wrapper was actually clamped below its content
+            // (an oversubscribed shared Fill panel): dockLayout keeps its full
+            // implicit size and its alignment offset would otherwise paint icons
+            // past the wrapper onto a neighbour. In every normal case the
+            // wrapper equals its content, so clipping stays off and hover zoom,
+            // reflections, and glow render unclipped as before.
+            clip: root.inPanel && !dockGeometry.panelFillLengthEnabled
+                && (width < implicitWidth || height < implicitHeight)
             // Cross axis is centered within the panel thickness. Along the main
             // axis, a filled block sits at 0 (icons are aligned internally by
             // dockLayout); a content-sized block is shifted by the configured
